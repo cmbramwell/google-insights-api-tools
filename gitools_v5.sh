@@ -160,7 +160,7 @@ slacksend() {
   slack_message_title="$slack_title"
   slack_footer=$(basename "$0")
   # curl -X POST --data-urlencode "payload={\"channel\": \"#$channel\", \"username\": \"$username\", \"text\": \"$message\", \"icon_emoji\": \":$icon:\"}" $webhook_url
-  
+
   if [[ "$slack_test" = 'wpt' && "SLACK_LINKBUTTONS_WPT" = [yY] ]]; then
     curl -X POST --data-urlencode "payload={\"channel\": \"#$channel\", \"username\": \"$username\", \"icon_emoji\": \":$icon:\", \"attachments\": [ { \"fallback\": \"${slack_fallback}\", $slack_button_msg \"color\": \"good\", \"ts\": \"$TIMESTAMP\", \"footer\": \"$slack_footer\", \"fields\": [{ \"title\": \"$slack_message_title\", \"value\": \"${message}\", \"short\": false }] } ]}" $webhook_url
   elif [[ "$slack_test" = 'psi' ]]; then
@@ -491,7 +491,7 @@ wpt_run() {
       curl -4s "https://www.webpagetest.org/testStatus.php?f=xml&test=$WPT_TESTIDA" > "$WPT_RESULT_TESTSTATUS_LOG"
       WPT_RESULT_STATUSCODE=$(grep -oP '(?<=<statusCode>).*(?=</statusCode>)' "$WPT_RESULT_TESTSTATUS_LOG")
       WPT_RESULT_STATUS=$(grep -oP '(?<=<statusText>).*(?=</statusText>)' "$WPT_RESULT_TESTSTATUS_LOG")
-      # check test result xml result status if Ok 200, proceed otherwise if 
+      # check test result xml result status if Ok 200, proceed otherwise if
       # Test Started 100 status or Waiting behind another test 101 status is found,
       # wait WPT_SLEEPTIME more to proceed
       while [[ "$WPT_RESULT_STATUSCODE" -eq '100' || "$WPT_RESULT_STATUSCODE" -eq '101' ]]; do
@@ -673,7 +673,7 @@ gt_run() {
     } > /tmp/gtmetrix-summary.log
   fi
   # waterfall=$(curl -4s --user $gtemail:$gtapikey ${gtmetrix_result}/har | jq)
-  
+
   onload_time=$(cat /tmp/gtmetrix-summary.log | jq '.results.onload_time')
   first_contentful_paint_time=$(cat /tmp/gtmetrix-summary.log | jq '.results.first_contentful_paint_time')
   page_elements=$(cat /tmp/gtmetrix-summary.log | jq '.results.page_elements')
@@ -751,7 +751,7 @@ gi_run_five() {
   # check for Internal 500 Errors
   BACKEND_ERRORCODE=$(cat /tmp/gitool-${strategy}.log | jq '.error.code')
   if [[ "$BACKEND_ERRORCODE" != 'null' ]]; then
-    err=1   
+    err=1
   fi
   if [[ "$err" -ne '0' || "$(wc -l < /tmp/gitool-${strategy}.log)" -lt '2' ]]; then
     echo
@@ -811,22 +811,22 @@ gi_run_five() {
       echo "Test url: ${prefix}://$domain" | tee -a /tmp/gitool-${strategy}-summary.log
       echo "FCP: ${fcp_median}ms ($fcp_cat) FID: ${fidelay_median}ms ($fidelay_cat)" | tee -a /tmp/gitool-${strategy}-summary.log
       # echo "Page Load Distributions" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportiona_perc}% pages fast FCP (<${fcl_distribution_min}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportionb_perc}% pages average FCP (<${fcl_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportionc_perc}% pages slow FCP (>${fcl_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportiona_perc}% pages fast FID (<${fidelay_distribution_min}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportionb_perc}% pages average FID (<${fidelay_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportionc_perc}% pages slow FID (>${fidelay_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportiona_perc}% pages fast FCP (<${fcl_distribution_min}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportionb_perc}% pages average FCP (<${fcl_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportionc_perc}% pages slow FCP (>${fcl_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportiona_perc}% pages fast FID (<${fidelay_distribution_min}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportionb_perc}% pages average FID (<${fidelay_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportionc_perc}% pages slow FID (>${fidelay_distribution_max}ms)" | tee -a /tmp/gitool-${strategy}-summary.log
     else
       echo "Test url: ${prefix}://$domain" | tee /tmp/gitool-${strategy}-summary.log
       echo "FCP median: $fcp_median ms ($fcp_cat) FID median: $fidelay_median ms ($fidelay_cat)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "Page Load Distributions" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportiona_perc}% of page loads have a fast FCP (less than ${fcl_distribution_min} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportionb_perc}% of page loads have an average FCP (less than ${fcl_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fcl_distribution_proportionc_perc}% of page loads have a slow FCP (over ${fcl_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportiona_perc}% of page loads have a fast FID (less than ${fidelay_distribution_min} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportionb_perc}% of page loads have an average FID (less than ${fidelay_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
-      echo "${fidelay_distribution_proportionc_perc}% of page loads have a slow FID (over ${fidelay_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "Page Load Distributions" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportiona_perc}% of page loads have a fast FCP (less than ${fcl_distribution_min} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportionb_perc}% of page loads have an average FCP (less than ${fcl_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fcl_distribution_proportionc_perc}% of page loads have a slow FCP (over ${fcl_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportiona_perc}% of page loads have a fast FID (less than ${fidelay_distribution_min} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportionb_perc}% of page loads have an average FID (less than ${fidelay_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
+      # echo "${fidelay_distribution_proportionc_perc}% of page loads have a slow FID (over ${fidelay_distribution_max} milliseconds)" | tee -a /tmp/gitool-${strategy}-summary.log
     fi
   fi
 
@@ -850,25 +850,25 @@ gi_run_five() {
   # LH_FID
   LH_FID=$(cat /tmp/gitool-${strategy}.log  | jq '.lighthouseResult.audits.metrics.details.items[] | .estimatedInputLatency')
 
-  echo "Lighthouse Version: $LH_VER" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "Total-Page-Size: $tt_pageweight" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "First-Contentful-Paint: $LH_FCP" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "First-Meaningful-Paint: $LH_FMP" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "Speed-Index: $LH_SI" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "First-CPU-Idle: $LH_FCI" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "Time-to-Interactive: $LH_TTI" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "Estimated-Input-Latency: $LH_FID" | tee -a /tmp/gitool-${strategy}-summary.log
-  echo "Time-To-First-Byte: $ttfb_rootdoc" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Lighthouse Version: $LH_VER" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Total-Page-Size: $tt_pageweight" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "First-Contentful-Paint: $LH_FCP" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "First-Meaningful-Paint: $LH_FMP" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Speed-Index: $LH_SI" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "First-CPU-Idle: $LH_FCI" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Time-to-Interactive: $LH_TTI" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Estimated-Input-Latency: $LH_FID" | tee -a /tmp/gitool-${strategy}-summary.log
+  # echo "Time-To-First-Byte: $ttfb_rootdoc" | tee -a /tmp/gitool-${strategy}-summary.log
 
-  echo "" | tee -a /tmp/gitool-${strategy}-summary-js.log
-  echo "JavaScript-execution-time: $LH_JSBOOTUPTIME" | tee -a /tmp/gitool-${strategy}-summary-js.log
-  echo "URL  Total  Script-Evaluation  Script-Parse" | tee -a /tmp/gitool-${strategy}-summary-js.log
-  echo "$LH_JSBOOTUPURLS" | column -t | tee -a /tmp/gitool-${strategy}-summary-js.log
+  # echo "" | tee -a /tmp/gitool-${strategy}-summary-js.log
+  # echo "JavaScript-execution-time: $LH_JSBOOTUPTIME" | tee -a /tmp/gitool-${strategy}-summary-js.log
+  # echo "URL  Total  Script-Evaluation  Script-Parse" | tee -a /tmp/gitool-${strategy}-summary-js.log
+  # echo "$LH_JSBOOTUPURLS" | column -t | tee -a /tmp/gitool-${strategy}-summary-js.log
 
-  echo "" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
-  echo "Eliminate Render Blocking Resource Potential Savings: $render_blocking_savings" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
-  echo "URL  Size   Potential-Savings" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
-  echo "$render_blocking_urls" | column -t | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
+  # echo "" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
+  # echo "Eliminate Render Blocking Resource Potential Savings: $render_blocking_savings" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
+  # echo "URL  Size   Potential-Savings" | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
+  # echo "$render_blocking_urls" | column -t | tee -a /tmp/gitool-${strategy}-summary-renderblock.log
 
   echo
   if [[ "$SLACK" = [yY] ]]; then
@@ -966,7 +966,7 @@ gi_run() {
 
       # filtered json arrays
       gpsi_results_formatted_json=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults')
-      
+
       gpsi_avoidlandingpageredirects_json=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .AvoidLandingPageRedirects')
       gpsi_avoidlandingpageredirects_localname=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .AvoidLandingPageRedirects.localizedRuleName' | sed -e 's|\"||g')
       gpsi_avoidlandingpageredirects_ruleimpact=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .AvoidLandingPageRedirects.ruleImpact' | sed -e 's|\"||g')
@@ -974,7 +974,7 @@ gi_run() {
         gpsi_avoidlandingpageredirects_key=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .AvoidLandingPageRedirects.summary.args | .[] .key' | sed -e 's|\"||g')
         gpsi_avoidlandingpageredirects_value=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .AvoidLandingPageRedirects.summary.args | .[] .value' | sed -e 's|\"||g')
       fi
-      
+
       gpsi_enablegzipcompression_json=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .EnableGzipCompression')
       gpsi_enablegzipcompression_localname=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .EnableGzipCompression.localizedRuleName' | sed -e 's|\"||g')
       gpsi_enablegzipcompression_ruleimpact=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .EnableGzipCompression.ruleImpact' | sed -e 's|\"||g')
@@ -982,7 +982,7 @@ gi_run() {
         gpsi_enablegzipcompression_key=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .EnableGzipCompression.summary.args | .[] .key' | sed -e 's|\"||g')
         gpsi_enablegzipcompression_value=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .EnableGzipCompression.summary.args | .[] .value' | sed -e 's|\"||g')
       fi
-      
+
       gpsi_leveragebrowsercaching_json=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .LeverageBrowserCaching')
       gpsi_leveragebrowsercaching_localname=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .LeverageBrowserCaching.localizedRuleName' | sed -e 's|\"||g')
       gpsi_leveragebrowsercaching_ruleimpact=$(cat /tmp/gitool-${strategy}.log | jq '.formattedResults.ruleResults | .LeverageBrowserCaching.ruleImpact' | sed -e 's|\"||g')
@@ -1074,7 +1074,7 @@ gi_run() {
       fi
     elif [[ "$PAGESPEED_SUGGESTION" != [yY] && "$origin_check" = 'default' ]]; then
       gpsi_speed_score=$(cat /tmp/gitool-${strategy}.log | jq '.ruleGroups.SPEED.score')
-      gpsi_speed_score_label="Score: $gpsi_speed_score"      
+      gpsi_speed_score_label="Score: $gpsi_speed_score"
     else
       gpsi_speed_score_label=""
     fi
