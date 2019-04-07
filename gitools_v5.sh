@@ -836,6 +836,7 @@ gi_run_five() {
     echo "PageSpeed Insights v5 Score Weighting" | tee -a /tmp/gitool-${strategy}-summary.log
     echo "$LH_WEIGHTS" | tee -a /tmp/gitool-${strategy}-summary.log
   fi
+  echo "https://developers.google.com/speed/pagespeed/insights/?url=netsparker.com" | tee -a /tmp/gitool-${strategy}-summary.log
 
   # LH_FCP
   LH_FCP=$(cat /tmp/gitool-${strategy}.log  | jq '.lighthouseResult.audits.metrics.details.items[] | .firstContentfulPaint')
@@ -874,8 +875,8 @@ gi_run_five() {
   if [[ "$SLACK" = [yY] ]]; then
     if [[ "$fcp_median" != 'null' || "$fidelay_median" != 'null' || "$LH_SCORE" != 'null' ]]; then
       send_message="$(cat /tmp/gitool-${strategy}-summary.log)"
-      send_messagejs="$(cat /tmp/gitool-${strategy}-summary-js.log)"
-      send_message_renderblock="$(cat /tmp/gitool-${strategy}-summary-renderblock.log)"
+      # send_messagejs="$(cat /tmp/gitool-${strategy}-summary-js.log)"
+      # send_message_renderblock="$(cat /tmp/gitool-${strategy}-summary-renderblock.log)"
       # LH_SCOREPERC_EVAL=$(echo $LH_SCOREPERC | cut -d . -f1)
       if [[ "$LH_SCOREPERC" -ge '90' ]]; then
         message_color='good'
@@ -885,14 +886,14 @@ gi_run_five() {
         message_color='danger'
       fi
       slacksend "$send_message" "$DT - Google PageSpeed Insights v5" psi "$message_color"
-      slacksend "$send_messagejs" "$DT - Google PageSpeed Insights v5" psi-md "$message_color"
-      slacksend "$send_message_renderblock" "$DT - Google PageSpeed Insights v5" psi-md "$message_color"
+      # slacksend "$send_messagejs" "$DT - Google PageSpeed Insights v5" psi-md "$message_color"
+      # slacksend "$send_message_renderblock" "$DT - Google PageSpeed Insights v5" psi-md "$message_color"
     fi
   fi
   rm -rf /tmp/gitool-${strategy}.log
   rm -rf /tmp/gitool-${strategy}-summary.log
-  rm -rf /tmp/gitool-${strategy}-summary-js.log
-  rm -rf /tmp/gitool-${strategy}-summary-renderblock.log
+  # rm -rf /tmp/gitool-${strategy}-summary-js.log
+  # rm -rf /tmp/gitool-${strategy}-summary-renderblock.log
 }
 
 ####################
