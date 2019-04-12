@@ -836,7 +836,7 @@ gi_run_five() {
     echo "PageSpeed Insights v5 Score Weighting" | tee -a /tmp/gitool-${strategy}-summary.log
     echo "$LH_WEIGHTS" | tee -a /tmp/gitool-${strategy}-summary.log
   fi
-  echo "https://developers.google.com/speed/pagespeed/insights/?url=netsparker.com" | tee -a /tmp/gitool-${strategy}-summary.log
+  echo "https://developers.google.com/speed/pagespeed/insights/?url=$domain" | tee -a /tmp/gitool-${strategy}-summary.log
 
   # LH_FCP
   LH_FCP=$(cat /tmp/gitool-${strategy}.log  | jq '.lighthouseResult.audits.metrics.details.items[] | .firstContentfulPaint')
